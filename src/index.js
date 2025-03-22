@@ -9,8 +9,6 @@ const config = require('./config');
 console.log('Configuration loaded:', {
   env: config.get('env'),
   port: config.get('port'),
-  apiPrefix: config.get('api.prefix'),
-  deepinfraBaseUrl: config.get('deepinfra.baseUrl')
 });
 
 const app = express();
@@ -49,7 +47,7 @@ app.get('/health', (req, res) => {
 
 // API Routes
 const novelRoutes = require('./routes/novel.routes');
-app.use(`${config.get('api.prefix')}/novel`, novelRoutes);
+app.use(`/api/novel`, novelRoutes);
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, '../public')));
