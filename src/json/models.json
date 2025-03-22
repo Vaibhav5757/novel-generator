@@ -1,0 +1,24 @@
+{
+    "models": [
+        {
+            "id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "name": "Mixtral 8x7B",
+            "description": "A mixture-of-experts model with 8 experts, each with 7 billion parameters. Designed for high efficiency and strong reasoning capabilities in instruction-following tasks."
+        },
+        {
+            "id": "google/gemma-3-27b-it",
+            "name": "Google Gemma 3.27B",
+            "description": "A 27-billion parameter model optimized by Google for instruction tuning. Offers strong language understanding and generation capabilities with a focus on accuracy."
+        },
+        {
+            "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+            "name": "DeepSeek Qwen 32B",
+            "description": "A distilled version of the Qwen-32B model by DeepSeek AI, balancing high performance with efficiency. Suited for both general NLP tasks and complex reasoning."
+        },
+        {
+            "id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+            "name": "Llama 3.1 8B",
+            "description": "An 8-billion parameter instruction-tuned model by Meta, part of the Llama 3.1 series. Focused on robust natural language understanding and generation."
+        }
+    ]
+}

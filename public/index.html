@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novel Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Novel Generator</h1>
+            <div class="controls">
+                <div class="model-selector">
+                    <label class="model-label" for="modelSelect">Model:</label>
+                    <div class="model-select-container">
+                        <select id="modelSelect">
+                            <!-- Models will be populated dynamically -->
+                        </select>
+                        <div class="model-info" id="modelInfo">
+                            <!-- Model details will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+                <button id="themeToggle" class="theme-toggle">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be inserted here -->
+                </div>
+
+                <div class="toggle-settings-container" id="toggleSettingsContainer">
+                    <p class="message-for-settings">Show Settings</p>
+                </div>
+                <div class="model-settings-container" id="modelSettingsContainer">
+                    <!-- Input ranges will come here -->
+                </div>
+                <div class="model-narrative-container" id="modelNarrativeContainer">
+                    <!-- Input narrative fields will be inserted here -->
+                </div>
+
+                <div class="chat-input-container">
+                    <textarea id="userInput" placeholder="Type your context here to start the novel..."
+                        rows="3"></textarea>
+                    <button id="sendButton">Send</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Model Change Confirmation Modal -->
+    <div id="modelChangeModal" class="modal">
+        <div class="modal-content">
+            <h2>Change Model</h2>
+            <p>Changing the model will reset the chat history. Do you want to continue?</p>
+            <div class="modal-buttons">
+                <button id="confirmModelChange" class="btn-primary">Continue</button>
+                <button id="cancelModelChange" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
