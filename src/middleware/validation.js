@@ -73,14 +73,6 @@ const validateSettingRequest = [
       max: settings.settings.max_tokens.max
     })
     .withMessage(`Max tokens must be between ${settings.settings.max_tokens.min} and ${settings.settings.max_tokens.max}.`),
-
-  body("settings.n")
-    .optional()
-    .isInt({
-      min: settings.settings.n.min,
-      max: settings.settings.n.max
-    })
-    .withMessage(`n must be between ${settings.settings.n.min} and ${settings.settings.n.max}.`),
 ];
 
 const validateNarrativeRequest = [

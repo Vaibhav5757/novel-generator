@@ -64,10 +64,6 @@ const narrative = require('../json/narrative.json');
  *                     type: integer
  *                     description: Maximum length of the response
  *                     default: 2000
- *                   n:
- *                     type: integer
- *                     description: Number of variations
- *                     default: 1
  *               narrative:
  *                 type: object
  *                 description: Narrative preferences
@@ -99,7 +95,11 @@ const narrative = require('../json/narrative.json');
  *                 content:
  *                   type: string
  *                 prompt_used:
- *                   type: string
+ *                   type: string   
+ *                 tokens_consumed:
+ *                   type: number
+ *                 tokens_prompt:
+ *                   type: number
  *       429:
  *         description: Rate limit exceeded
  *       500:
@@ -177,10 +177,6 @@ router.post(
  *                     type: integer
  *                     description: Maximum length of the response
  *                     default: 2000
- *                   n:
- *                     type: integer
- *                     description: Number of variations
- *                     default: 1
  *     responses:
  *       200:
  *         description: Chat response received
@@ -193,6 +189,10 @@ router.post(
  *                   type: string   
  *                 prompt_used:
  *                   type: string
+ *                 tokens_consumed:
+ *                   type: number
+ *                 tokens_prompt:
+ *                   type: number
  *       429:
  *         description: Rate limit exceeded
  *       500:
