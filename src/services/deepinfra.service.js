@@ -22,11 +22,12 @@ class DeepInfraService {
             const dpModel = await this.getModel(model);
             const body = {
                 input: prompt,
-                options
+                ...options
             };
             const output = await dpModel.generate(body);
-            const text = output.results[0].generated_text;
-            return text;
+            const { num_tokens: tokens_consumed, num_input_tokens: tokens_prompt } = output;
+            const { generated_text: text } = output.results[0];
+            return { text, tokens_consumed, tokens_prompt };
         } catch (error) {
             console.error('DeepInfra API Error:', error);
             throw new Error('Failed to generate text from DeepInfra');

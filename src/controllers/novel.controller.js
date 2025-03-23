@@ -13,7 +13,6 @@ const generateChapter = async (req, res) => {
         frequency_penalty = 0.0,
         repetition_penalty = 1.0,
         max_tokens = 2000,
-        n = 1,
       } = {},
       narrative: {
         genre,
@@ -37,18 +36,17 @@ const generateChapter = async (req, res) => {
            Here's the context given by the user: ${context}`;
 
     // Generate text using DeepInfra
-    const content = await deepInfraService.generateText(prompt, model, {
+    const { text: content, tokens_consumed, tokens_prompt } = await deepInfraService.generateText(prompt, model, {
       temperature,
       top_p,
       top_k,
-      max_tokens,
+      max_new_tokens: max_tokens,
+      repetition_penalty,
       presence_penalty,
       frequency_penalty,
-      repetition_penalty,
-      n,
     });
 
-    return res.json({ content, prompt_used: prompt });
+    return res.json({ content, prompt_used: prompt, tokens_consumed, tokens_prompt });
   } catch (error) {
     console.error('Error generating chapter:', error);
     res.status(500).json({ error: 'Failed to generate chapter' });
@@ -67,7 +65,6 @@ const chat = async (req, res) => {
         frequency_penalty = 0.0,
         repetition_penalty = 1.0,
         max_tokens = 2000,
-        n = 1,
       } = {},
     } = req.body;
 
@@ -79,18 +76,17 @@ const chat = async (req, res) => {
     const prompt = generateStoryPrompt(history, message);
 
     // Generate text using DeepInfra
-    const content = await deepInfraService.generateText(prompt, model, {
+    const { text: content, tokens_consumed, tokens_prompt } = await deepInfraService.generateText(prompt, model, {
       temperature,
       top_p,
-      max_tokens,
+      top_k,
+      max_new_tokens: max_tokens,
+      repetition_penalty,
       presence_penalty,
       frequency_penalty,
-      repetition_penalty,
-      top_k,
-      n,
     });
 
-    return res.json({ content, prompt_used: prompt });
+    return res.json({ content, prompt_used: prompt, tokens_consumed, tokens_prompt });
   } catch (error) {
     console.error('Error processing chat:', error);
     res.status(500).json({ error: 'Failed to process chat message' });
