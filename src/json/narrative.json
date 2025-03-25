@@ -21,11 +21,12 @@
             "Psychological Horror",
             "Dark Fantasy",
             "Space Opera",
-            "Urban Fantasy"
+            "Urban Fantasy",
+            "Erotic"
         ],
         "writing_style": [
-            "Concise",
             "Descriptive",
+            "Concise",
             "Poetic",
             "Fast-Paced",
             "Stream of Consciousness",
@@ -44,10 +45,10 @@
             "Hyperrealistic"
         ],
         "point_of_view": [
-            "First-Person",
-            "Second-Person",
             "Third-Person Limited",
             "Third-Person Omniscient",
+            "First-Person",
+            "Second-Person",
             "Multiple Perspectives",
             "Unreliable Narrator",
             "Epistolary",

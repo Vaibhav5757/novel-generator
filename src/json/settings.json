@@ -3,7 +3,7 @@
         "temperature": {
             "min": 0.0,
             "max": 2.0,
-            "default": 0.7
+            "default": 1.0
         },
         "top_p": {
             "min": 0.0,
@@ -33,7 +33,7 @@
         "max_tokens": {
             "min": 1,
             "max": 5000,
-            "default": 1000
+            "default": 4000
         }
     }
 }
