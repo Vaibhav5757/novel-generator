@@ -12,7 +12,7 @@ export class ApiService {
 
   static async sendMessage(message, history, settings, narrative, model) {
     const endpoint =
-      history.length === 0 ? "/api/novel/generate" : "/api/novel/chat";
+      history.length === 0 ? "/api/novel/v1/generate" : "/api/novel/v1/chat";
     try {
       const requestBody =
         history.length === 0
