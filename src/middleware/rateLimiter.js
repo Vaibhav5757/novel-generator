@@ -1,3 +1,5 @@
+const logger = require("../utils/logger");
+
 // Global counter that resets daily at midnight
 const DAILY_LIMIT = 100;
 let globalRequestCount = 0;
@@ -42,7 +44,7 @@ const rateLimiter = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.error('Rate limiter error:', error);
+        logger.error('Rate limiter error:', error);
         // In case of error, allow the request to proceed
         next();
     }
