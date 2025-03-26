@@ -1,5 +1,6 @@
 const { generateStoryPrompt } = require('../helper');
 const deepInfraService = require('../services/deepinfra.service');
+const logger = require('../utils/logger');
 
 const generateChapter = async (req, res) => {
   try {
@@ -48,7 +49,7 @@ const generateChapter = async (req, res) => {
 
     return res.json({ content, prompt_used: prompt, tokens_consumed, tokens_prompt });
   } catch (error) {
-    console.error('Error generating chapter:', error);
+    logger.error('Error generating chapter:', error);
     res.status(500).json({ error: 'Failed to generate chapter' });
   }
 };
@@ -88,7 +89,7 @@ const chat = async (req, res) => {
 
     return res.json({ content, prompt_used: prompt, tokens_consumed, tokens_prompt });
   } catch (error) {
-    console.error('Error processing chat:', error);
+    logger.error('Error processing chat:', error);
     res.status(500).json({ error: 'Failed to process chat message' });
   }
 };

@@ -1,5 +1,6 @@
 const { TextGeneration } = require('deepinfra');
 const config = require('../config');
+const logger = require('../utils/logger');
 
 class DeepInfraService {
     constructor() {
@@ -29,7 +30,7 @@ class DeepInfraService {
             const { generated_text: text } = output.results[0];
             return { text, tokens_consumed, tokens_prompt };
         } catch (error) {
-            console.error('DeepInfra API Error:', error);
+            logger.error('DeepInfra API Error:', error);
             throw new Error('Failed to generate text from DeepInfra');
         }
     }
