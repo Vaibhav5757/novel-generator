@@ -1,9 +1,9 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const models = require('../json/models.json');
 const settings = require('../json/settings.json');
 const narrative = require('../json/narrative.json');
-const v1Routes = require("./v1.0/novel.routes");
+const v1Routes = require('./v1.0/novel.routes');
 
 
 /**
@@ -34,8 +34,8 @@ const v1Routes = require("./v1.0/novel.routes");
  *                         type: string
  *                         required: false
  */
-router.get("/models", (req, res) => {
-    res.json(models);
+router.get('/models', (req, res) => {
+  res.json(models);
 });
 
 /**
@@ -107,8 +107,8 @@ router.get("/models", (req, res) => {
  *                         default:
  *                           type: number
  */
-router.get("/settings", (req, res) => {
-    res.json(settings);
+router.get('/settings', (req, res) => {
+  res.json(settings);
 });
 
 /**
@@ -142,10 +142,10 @@ router.get("/settings", (req, res) => {
  *                       items:
  *                         type: string
  */
-router.get("/narrative", (req, res) => {
-    res.json(narrative);
+router.get('/narrative', (req, res) => {
+  res.json(narrative);
 });
 
-router.use("/v1", v1Routes);
+router.use('/v1', v1Routes);
 
 module.exports = router;

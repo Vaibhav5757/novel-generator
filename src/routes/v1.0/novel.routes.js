@@ -1,11 +1,11 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const novelController = require("../../controllers/novel.controller");
-const rateLimiter = require("../../middleware/rateLimiter");
+const novelController = require('../../controllers/novel.controller');
+const rateLimiter = require('../../middleware/rateLimiter');
 const {
-    validateChatRequest,
-    validateGenerateRequest,
-} = require("../../middleware/validation");
+  validateChatRequest,
+  validateGenerateRequest,
+} = require('../../middleware/validation');
 
 /**
  * @swagger
@@ -103,10 +103,10 @@ const {
  *         description: Server error
  */
 router.post(
-    "/generate",
-    rateLimiter,
-    validateGenerateRequest,
-    novelController.generateChapter
+  '/generate',
+  rateLimiter,
+  validateGenerateRequest,
+  novelController.generateChapter
 );
 
 /**
@@ -195,6 +195,6 @@ router.post(
  *       500:
  *         description: Server error
  */
-router.post("/chat", rateLimiter, validateChatRequest, novelController.chat);
+router.post('/chat', rateLimiter, validateChatRequest, novelController.chat);
 
 module.exports = router;
