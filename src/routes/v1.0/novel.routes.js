@@ -2,10 +2,7 @@ const express = require('express');
 const router = express.Router();
 const novelController = require('../../controllers/novel.controller');
 const rateLimiter = require('../../middleware/rateLimiter');
-const {
-  validateChatRequest,
-  validateGenerateRequest,
-} = require('../../middleware/validation');
+const { validateChatRequest, validateGenerateRequest } = require('../../middleware/validation');
 
 /**
  * @swagger
@@ -40,7 +37,7 @@ const {
  *                   top_p:
  *                     type: number
  *                     description: Sampling threshold (0.5 - 1.0)
- *                     default: 1.0 
+ *                     default: 1.0
  *                   top_k:
  *                     type: number
  *                     description: Top-k sampling (0 - 1000)
@@ -52,7 +49,7 @@ const {
  *                   frequency_penalty:
  *                     type: number
  *                     description: Reduces repetition (-2.0 - 2.0)
- *                     default: 0.0 
+ *                     default: 0.0
  *                   repetition_penalty:
  *                     type: number
  *                     description: Repetition penalty (0.01 - 5.0)
@@ -92,7 +89,7 @@ const {
  *                 content:
  *                   type: string
  *                 prompt_used:
- *                   type: string   
+ *                   type: string
  *                 tokens_consumed:
  *                   type: number
  *                 tokens_prompt:
@@ -102,12 +99,7 @@ const {
  *       500:
  *         description: Server error
  */
-router.post(
-  '/generate',
-  rateLimiter,
-  validateGenerateRequest,
-  novelController.generateChapter
-);
+router.post('/generate', rateLimiter, validateGenerateRequest, novelController.generateChapter);
 
 /**
  * @swagger
@@ -131,7 +123,7 @@ router.post(
  *               model:
  *                 type: string
  *                 description: The model to use for chat
- *               history:   
+ *               history:
  *                 type: array
  *                 description: The chat history. At max 20 messages
  *                 properties:
@@ -153,12 +145,12 @@ router.post(
  *                   top_p:
  *                     type: number
  *                     description: Sampling threshold (0.5 - 1.0)
- *                     default: 1.0 
+ *                     default: 1.0
  *                   top_k:
  *                     type: number
  *                     description: Top-k sampling (0 - 1000)
  *                     default: 0
- *                   repetition_penalty:    
+ *                   repetition_penalty:
  *                     type: number
  *                     description: Repetition penalty (0.01 - 5.0)
  *                     default: 1.0
@@ -183,7 +175,7 @@ router.post(
  *               type: object
  *               properties:
  *                 content:
- *                   type: string   
+ *                   type: string
  *                 prompt_used:
  *                   type: string
  *                 tokens_consumed:

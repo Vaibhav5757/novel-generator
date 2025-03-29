@@ -15,13 +15,8 @@ const generateChapter = async (req, res) => {
         repetition_penalty = 1.0,
         max_tokens = 2000,
       } = {},
-      narrative: {
-        genre,
-        writing_style,
-        point_of_view,
-      } = {},
+      narrative: { genre, writing_style, point_of_view } = {},
     } = req.body;
-
 
     // Construct the prompt based on context
     let prompt = `You are an AI-powered novel-writing assistant. 
@@ -37,7 +32,11 @@ const generateChapter = async (req, res) => {
            Here's the context given by the user: ${context}`;
 
     // Generate text using DeepInfra
-    const { text: content, tokens_consumed, tokens_prompt } = await deepInfraService.generateText(prompt, model, {
+    const {
+      text: content,
+      tokens_consumed,
+      tokens_prompt,
+    } = await deepInfraService.generateText(prompt, model, {
       temperature,
       top_p,
       top_k,
@@ -47,7 +46,12 @@ const generateChapter = async (req, res) => {
       frequency_penalty,
     });
 
-    return res.json({ content, prompt_used: prompt, tokens_consumed, tokens_prompt });
+    return res.json({
+      content,
+      prompt_used: prompt,
+      tokens_consumed,
+      tokens_prompt,
+    });
   } catch (error) {
     logger.error('Error generating chapter:', error);
     res.status(500).json({ error: 'Failed to generate chapter' });
@@ -70,14 +74,20 @@ const chat = async (req, res) => {
     } = req.body;
 
     if (history.length >= 20) {
-      return res.status(429).json({ content: 'Chat history is too long. Please start a new conversation.' });
+      return res.status(429).json({
+        content: 'Chat history is too long. Please start a new conversation.',
+      });
     }
 
     // Generate prompt
     const prompt = generateStoryPrompt(history, message);
 
     // Generate text using DeepInfra
-    const { text: content, tokens_consumed, tokens_prompt } = await deepInfraService.generateText(prompt, model, {
+    const {
+      text: content,
+      tokens_consumed,
+      tokens_prompt,
+    } = await deepInfraService.generateText(prompt, model, {
       temperature,
       top_p,
       top_k,
@@ -87,7 +97,12 @@ const chat = async (req, res) => {
       frequency_penalty,
     });
 
-    return res.json({ content, prompt_used: prompt, tokens_consumed, tokens_prompt });
+    return res.json({
+      content,
+      prompt_used: prompt,
+      tokens_consumed,
+      tokens_prompt,
+    });
   } catch (error) {
     logger.error('Error processing chat:', error);
     res.status(500).json({ error: 'Failed to process chat message' });
@@ -96,5 +111,5 @@ const chat = async (req, res) => {
 
 module.exports = {
   generateChapter,
-  chat
-}; 
+  chat,
+};

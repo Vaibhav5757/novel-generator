@@ -5,7 +5,6 @@ const settings = require('../json/settings.json');
 const narrative = require('../json/narrative.json');
 const v1Routes = require('./v1.0/novel.routes');
 
-
 /**
  * @swagger
  * /api/novel/models:

@@ -1,0 +1,25 @@
+# dependencies
+node_modules
+package-lock.json
+yarn.lock
+
+# build outputs
+dist
+build
+coverage
+
+# logs
+logs
+*.log
+
+# environment variables
+.env*
+
+# editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

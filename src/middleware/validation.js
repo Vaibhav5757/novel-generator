@@ -22,15 +22,17 @@ const validateSettingRequest = [
     .optional()
     .isFloat({
       min: settings.settings.temperature.min,
-      max: settings.settings.temperature.max
+      max: settings.settings.temperature.max,
     })
-    .withMessage(`Temperature must be between ${settings.settings.temperature.min} and ${settings.settings.temperature.max}.`),
+    .withMessage(
+      `Temperature must be between ${settings.settings.temperature.min} and ${settings.settings.temperature.max}.`
+    ),
 
   body('settings.top_p')
     .optional()
     .isFloat({
       min: settings.settings.top_p.min,
-      max: settings.settings.top_p.max
+      max: settings.settings.top_p.max,
     })
     .withMessage(`Top-p must be between ${settings.settings.top_p.min} and ${settings.settings.top_p.max}.`),
 
@@ -38,7 +40,7 @@ const validateSettingRequest = [
     .optional()
     .isFloat({
       min: settings.settings.top_k.min,
-      max: settings.settings.top_k.max
+      max: settings.settings.top_k.max,
     })
     .withMessage(`Top-k must be between ${settings.settings.top_k.min} and ${settings.settings.top_k.max}.`),
 
@@ -46,33 +48,41 @@ const validateSettingRequest = [
     .optional()
     .isFloat({
       min: settings.settings.presence_penalty.min,
-      max: settings.settings.presence_penalty.max
+      max: settings.settings.presence_penalty.max,
     })
-    .withMessage(`Presence penalty must be between ${settings.settings.presence_penalty.min} and ${settings.settings.presence_penalty.max}.`),
+    .withMessage(
+      `Presence penalty must be between ${settings.settings.presence_penalty.min} and ${settings.settings.presence_penalty.max}.`
+    ),
 
   body('settings.frequency_penalty')
     .optional()
     .isFloat({
       min: settings.settings.frequency_penalty.min,
-      max: settings.settings.frequency_penalty.max
+      max: settings.settings.frequency_penalty.max,
     })
-    .withMessage(`Frequency penalty must be between ${settings.settings.frequency_penalty.min} and ${settings.settings.frequency_penalty.max}.`),
+    .withMessage(
+      `Frequency penalty must be between ${settings.settings.frequency_penalty.min} and ${settings.settings.frequency_penalty.max}.`
+    ),
 
   body('settings.repetition_penalty')
     .optional()
     .isFloat({
       min: settings.settings.repetition_penalty.min,
-      max: settings.settings.repetition_penalty.max
+      max: settings.settings.repetition_penalty.max,
     })
-    .withMessage(`Repetition penalty must be between ${settings.settings.repetition_penalty.min} and ${settings.settings.repetition_penalty.max}.`),
+    .withMessage(
+      `Repetition penalty must be between ${settings.settings.repetition_penalty.min} and ${settings.settings.repetition_penalty.max}.`
+    ),
 
   body('settings.max_tokens')
     .optional()
     .isInt({
       min: settings.settings.max_tokens.min,
-      max: settings.settings.max_tokens.max
+      max: settings.settings.max_tokens.max,
     })
-    .withMessage(`Max tokens must be between ${settings.settings.max_tokens.min} and ${settings.settings.max_tokens.max}.`),
+    .withMessage(
+      `Max tokens must be between ${settings.settings.max_tokens.min} and ${settings.settings.max_tokens.max}.`
+    ),
 ];
 
 const validateNarrativeRequest = [

@@ -1,10 +1,11 @@
 module.exports = {
   generateStoryPrompt: (chatHistory, latestUserPrompt) => {
     // Convert chat history into readable dialogue format
-    const formattedHistory = chatHistory.map(entry => {
-      return `${entry.role === 'user' ? 'User' : 'Assistant'}: ${entry.content}`;
-    }).join('\n\n');
-
+    const formattedHistory = chatHistory
+      .map(entry => {
+        return `${entry.role === 'user' ? 'User' : 'Assistant'}: ${entry.content}`;
+      })
+      .join('\n\n');
 
     // Construct the final prompt
     return `Below is a conversation history where the user and the AI have been collaborating on a novel. 
@@ -21,5 +22,5 @@ module.exports = {
                 ${latestUserPrompt}
 
                 **Continue the novel:**`;
-  }
+  },
 };
