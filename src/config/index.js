@@ -1,3 +1,6 @@
+// Load environment variables first, before convict is initialized
+require('dotenv').config();
+
 const convict = require('convict');
 const config = convict({
   env: {

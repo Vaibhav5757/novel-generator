@@ -12,4 +12,5 @@ RUN npm ci --only=production
 # Bundle app source
 COPY . .
 
-RUN npm run start
+# This should be CMD, not RUN
+CMD ["npm", "run", "start"]

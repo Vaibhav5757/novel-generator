@@ -30,7 +30,7 @@ const rateLimiter = async (req, res, next) => {
       return res.status(429).json({
         error: 'Rate limit exceeded',
         message: 'The API has reached its daily limit of 100 requests. Please try again tomorrow.',
-        remaining: 0
+        remaining: 0,
       });
     }
 

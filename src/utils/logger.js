@@ -12,7 +12,7 @@ if (!fs.existsSync(logDir)) {
 
 const logFormat = format.combine(
   format.timestamp({
-    format: 'YYYY-MM-DD HH:mm:ss'
+    format: 'YYYY-MM-DD HH:mm:ss',
   }),
   format.errors({ stack: true }),
   format.splat(),
@@ -26,23 +26,22 @@ const logger = winston.createLogger({
   transports: [
     new transports.File({
       filename: path.join(logDir, 'combined.log'),
-      level: 'info'
+      level: 'info',
     }),
 
     new transports.File({
       filename: path.join(logDir, 'error.log'),
-      level: 'error'
-    })
-  ]
+      level: 'error',
+    }),
+  ],
 });
 
 if (config.get('env') !== 'production') {
-  logger.add(new transports.Console({
-    format: format.combine(
-      format.colorize(),
-      format.simple()
-    )
-  }));
+  logger.add(
+    new transports.Console({
+      format: format.combine(format.colorize(), format.simple()),
+    })
+  );
 }
 
 morgan.token('response-headers', (req, res) => {
@@ -62,9 +61,12 @@ morgan.token('response-headers', (req, res) => {
           headers[prefix] = {};
         }
 
-        let headerKey = parts.slice(1).map((part, index) =>
-          index === 0 ? part.toLowerCase() : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
-        ).join('');
+        let headerKey = parts
+          .slice(1)
+          .map((part, index) =>
+            index === 0 ? part.toLowerCase() : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+          )
+          .join('');
 
         headers[prefix][headerKey] = headerValue;
       } else {
@@ -92,19 +94,19 @@ logger.morganFormat = (tokens, req, res) => {
     userAgent: tokens['user-agent'](req, res) || '-',
     timestamp: new Date().toISOString(),
 
-    headers: headers
+    headers: headers,
   });
 };
 
 logger.stream = {
-  write: (message) => {
+  write: message => {
     try {
       const parsedMessage = JSON.parse(message);
       logger.info('HTTP Access Log', parsedMessage);
     } catch (e) {
       logger.info(message.trim());
     }
-  }
+  },
 };
 
 module.exports = logger;

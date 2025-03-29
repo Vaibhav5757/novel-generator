@@ -27,12 +27,9 @@ app.use((req, res, next) => {
   next();
 });
 
-morgan.token('requestId', (req) => req.requestId);
+morgan.token('requestId', req => req.requestId);
 
-app.use(morgan(
-  logger.morganFormat,
-  { stream: logger.stream }
-));
+app.use(morgan(logger.morganFormat, { stream: logger.stream }));
 
 // Swagger configuration
 const swaggerOptions = {
@@ -86,10 +83,8 @@ app.use((err, req, res, next) => {
 
   res.status(err.status || 500).json({
     error: {
-      message: process.env.NODE_ENV === 'production'
-        ? 'An unexpected error occurred'
-        : err.message
-    }
+      message: process.env.NODE_ENV === 'production' ? 'An unexpected error occurred' : err.message,
+    },
   });
 });
 
@@ -97,4 +92,4 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   logger.info(`Server running at http://localhost:${port}`);
   logger.info(`Swagger documentation available at http://localhost:${port}/api-docs`);
-}); 
+});

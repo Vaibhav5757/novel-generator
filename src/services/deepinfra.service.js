@@ -23,7 +23,7 @@ class DeepInfraService {
       const dpModel = await this.getModel(model);
       const body = {
         input: prompt,
-        ...options
+        ...options,
       };
       const output = await dpModel.generate(body);
       const { num_tokens: tokens_consumed, num_input_tokens: tokens_prompt } = output;
@@ -36,4 +36,4 @@ class DeepInfraService {
   }
 }
 
-module.exports = new DeepInfraService(); 
+module.exports = new DeepInfraService();
