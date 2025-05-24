@@ -75,11 +75,11 @@ const chat = async (req, res) => {
       } = {},
     } = req.body;
 
-    // if (history.length >= 20) {
-    //   return res.status(429).json({
-    //     content: 'Chat history is too long. Please start a new conversation.',
-    //   });
-    // }
+    if (history.length >= 20) {
+      return res.status(429).json({
+        content: 'Chat history is too long. Please start a new conversation.',
+      });
+    }
 
     // Generate prompt
     const prompt = generateStoryPrompt(history, message);
