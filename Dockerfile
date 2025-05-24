@@ -6,11 +6,10 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package*.json ./
 
-# If you are building your code for production
-RUN npm ci --only=production
+RUN npm ci
 
 # Bundle app source
 COPY . .
 
 # This should be CMD, not RUN
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:dev"]

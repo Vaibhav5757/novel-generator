@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const config = require('./config');
+const { initCache } = require('./cache');
 const logger = require('./utils/logger');
 
 // Log configuration (remove in production)
@@ -13,6 +14,8 @@ logger.info('Configuration loaded:', {
   env: config.get('env'),
   port: config.get('port'),
 });
+
+initCache();
 
 const app = express();
 const port = config.get('port');
