@@ -39,6 +39,12 @@ const config = convict({
       env: 'REDIS_URI',
     },
   },
+  endless_chapter_count: {
+    doc: 'Number of chapters to be generated when endless mode is used',
+    format: Number,
+    default: 10,
+    env: 'ENDLESS_MODE_CHAPTER_COUNT',
+  },
 });
 
 // Perform validation
