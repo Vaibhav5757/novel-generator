@@ -13,6 +13,7 @@ module.exports = {
                 Use the conversation history to understand the context, style, and tone of the novel so far.
                 Continue the novel while maintaining consistency in plot, character development, and writing style. 
                 If the user has provided specific instructions, incorporate them seamlessly. 
+                The emphasis should be on dialogues. Generate more dialogues between the characters and make it natural. Make the characters as verbal as you can.
                 If no explicit instructions are given, continue the novel naturally while ensuring a smooth transition from the last response.
 
                 **Conversation History:**
