@@ -139,15 +139,6 @@ export class ChatManager {
     this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
   }
 
-  // Keep your existing addMessage method for non-streaming messages
-  addMessage(content, role) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${role}`;
-    messageDiv.innerHTML = content;
-    this.chatMessages.appendChild(messageDiv);
-    this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-  }
-
   addMessage(content, role) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${role}`;
