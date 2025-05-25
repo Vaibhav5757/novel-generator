@@ -12,4 +12,4 @@ RUN npm ci
 COPY . .
 
 # This should be CMD, not RUN
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start"]

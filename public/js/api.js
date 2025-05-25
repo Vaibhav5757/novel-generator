@@ -10,12 +10,10 @@ export class ApiService {
     }
   }
 
-  static async sendMessageStream(message, history, settings, narrative, model, onChunk) {
-    const isFirstMessage = history.length === 0;
+  static async sendMessageStream(message, storyId, settings, narrative, model, onChunk) {
+    const endpoint = !storyId ? '/api/novel/v2/generate' : '/api/novel/v2/chat';
 
-    const endpoint = isFirstMessage ? '/api/novel/v2/generate' : '/api/novel/v2/chat';
-
-    const requestBody = isFirstMessage
+    const requestBody = !storyId
       ? {
           context: message,
           model,
@@ -24,7 +22,7 @@ export class ApiService {
         }
       : {
           message,
-          history,
+          story_id: storyId,
           model,
           settings,
         };

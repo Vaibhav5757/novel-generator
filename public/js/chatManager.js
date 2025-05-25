@@ -7,6 +7,7 @@ export class ChatManager {
     this.userInput = document.getElementById('userInput');
     this.sendButton = document.getElementById('sendButton');
     this.chatHistory = [];
+    this.storyId = '';
     this.setupEventListeners();
     this.addWelcomeMessage();
   }
@@ -44,8 +45,10 @@ export class ChatManager {
   }
 
   async handleSend() {
-    const message = this.userInput.value.trim();
-    if (!message) return;
+    let message = this.userInput.value.trim();
+    if (!this.storyId && !message) return; // don't let user create story without any prompt
+
+    if (!message) message = `Write next chapter`;
 
     // Add user message to chat
     this.addMessage(message, 'user');
@@ -63,7 +66,7 @@ export class ChatManager {
       // Call the SSE-enabled API service
       await ApiService.sendMessageStream(
         message,
-        this.chatHistory,
+        this.storyId,
         settings,
         narrative,
         this.modelManager.getCurrentModel(),
@@ -85,6 +88,10 @@ export class ChatManager {
               break;
 
             case 'chapter_complete':
+              // Silent completion - no status messages shown to user
+              console.log('Generation completed');
+              this.storyId = data.story_id;
+              break;
             case 'complete':
               // Silent completion - no status messages shown to user
               console.log('Generation completed');
@@ -149,6 +156,7 @@ export class ChatManager {
 
   resetChat() {
     this.chatMessages.innerHTML = '';
+    this.storyId = '';
     this.chatHistory = [];
     this.addWelcomeMessage();
   }

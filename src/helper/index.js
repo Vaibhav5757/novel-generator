@@ -1,4 +1,5 @@
 const { CHAT_HISTORY_LIMIT, SSE_HEADERS, DEFAULT_SETTINGS } = require('../constants');
+const { getCache } = require('../cache');
 
 module.exports = {
   generateStoryPrompt: (chatHistory, latestUserPrompt) => {
@@ -61,7 +62,18 @@ module.exports = {
       Here's the context given by the user: ${context}`;
   },
 
-  createContinuationPrompt: (chapterNumber, storyGeneratedTillNow, previousContent) => {
+  createContinuationPrompt: async (storyId, message) => {
+    if (!storyId) throw new Error(`No story Id found`);
+    const cache = getCache();
+    const novel = await cache.get(storyId);
+    if (!novel) throw new Error(`No story found. It's probably deleted from cache`);
+    const chapterNumber = novel.chapters.length + 1; // 1st chapter is already created by initial endpoint
+    const previousContent = novel.chapters[novel.chapters.length - 1].story;
+    const storyGeneratedTillNow = novel.chapters.reduce((acc, curr) => acc + curr, ``);
+    const userPrompt =
+      message === `Write next chapter`
+        ? ''
+        : `User has provided additional context or request for next chapter content: ${message}`;
     return `You are an AI-powered novel-writing assistant. 
       The user had provided a background context, including setting, characters, plot, and tone. 
       A well-written, immersive chapter was generated which had aligned with the given details by user.
@@ -73,7 +85,9 @@ module.exports = {
       Make the characters as verbal as you can.
       This chapter is part of a novel and is the chapter #${chapterNumber}.
       Story so far is ${storyGeneratedTillNow}
-      Chapter produced earlier is ${previousContent}`;
+      Chapter produced earlier is ${previousContent}.
+      ${userPrompt}
+      `;
   },
 
   setupSSEResponse: res => {
