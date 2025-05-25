@@ -133,4 +133,19 @@ const validateChatRequest = [
   },
 ];
 
-module.exports = { validateGenerateRequest, validateChatRequest };
+const validateChatV2Request = [
+  ...validateCommonRequest,
+  ...validateSettingRequest,
+
+  body('story_id').isString().notEmpty().withMessage('Story ID is required'),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
+
+module.exports = { validateGenerateRequest, validateChatRequest, validateChatV2Request };

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const novelController = require('../../controllers/novel.controller');
 const rateLimiter = require('../../middleware/rateLimiter');
-const { validateChatRequest, validateGenerateRequest } = require('../../middleware/validation');
+const { validateGenerateRequest, validateChatV2Request } = require('../../middleware/validation');
 
 /**
  * @swagger
@@ -113,7 +113,7 @@ const { validateChatRequest, validateGenerateRequest } = require('../../middlewa
  *
  *                 data: {"type": "chunk", "content": " in the moonlight...", "streaming": true}
  *
- *                 data: {"type": "chapter_complete", "tokens_consumed": 150, "tokens_prompt": 50}
+ *                 data: {"type": "chapter_complete", "tokens_consumed": 150, "tokens_prompt": 50, "story_id": "4965e936-e9a4-4823-a33a-8a5efeffa2b8"}
  *
  *                 data: {"type": "complete", "summary": {"tokens_consumed": 1500, "tokens_prompt": 200, "chapters_generated": 3}}
  *
@@ -155,7 +155,7 @@ const { validateChatRequest, validateGenerateRequest } = require('../../middlewa
  *               type: string
  *               example: 'data: {"type": "error", "message": "Failed to generate chapter", "error": "Model connection failed"}'
  */
-router.post('/generate', rateLimiter, validateGenerateRequest, novelController.generateEndlessChapters);
+router.post('/generate', rateLimiter, validateGenerateRequest, novelController.streamChapterCreate);
 
 /**
  * @swagger
@@ -183,30 +183,9 @@ router.post('/generate', rateLimiter, validateGenerateRequest, novelController.g
  *                 type: string
  *                 description: The model to use for chat
  *                 example: "meta-llama/Llama-3.3-70B-Instruct-Turbo"
- *               history:
- *                 type: array
- *                 description: The chat history (maximum 20 messages for rate limiting)
- *                 maxItems: 20
- *                 items:
- *                   type: object
- *                   required:
- *                     - role
- *                     - content
- *                   properties:
- *                     role:
- *                       type: string
- *                       description: The role of the message sender
- *                       enum: [user, assistant]
- *                       example: "user"
- *                     content:
- *                       type: string
- *                       description: The content of the message
- *                       example: "Please continue the story where the hero enters the castle."
- *                 example:
- *                   - role: "user"
- *                     content: "Start a fantasy story about a brave knight."
- *                   - role: "assistant"
- *                     content: "Sir Galahad rode through the misty forest, his armor gleaming in the moonlight..."
+ *               story_id:
+ *                 type: String
+ *                 description: Story ID recieved in response of /generate endpoint
  *               settings:
  *                 type: object
  *                 description: Additional generation settings for fine-tuning the response
@@ -313,6 +292,6 @@ router.post('/generate', rateLimiter, validateGenerateRequest, novelController.g
  *               type: string
  *               example: 'data: {"type": "error", "message": "Failed to process chat message", "error": "Model processing failed"}'
  */
-router.post('/chat', rateLimiter, validateChatRequest, novelController.chatEndless);
+router.post('/chat', rateLimiter, validateChatV2Request, novelController.chatStream);
 
 module.exports = router;

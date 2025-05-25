@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const {
   generateStoryPrompt,
   extractSettings,
@@ -12,6 +13,7 @@ const {
 const deepInfraService = require('../services/deepinfra.service');
 const logger = require('../utils/logger');
 const config = require('../config');
+const { getCache } = require('../cache');
 
 const generateChapter = async (req, res) => {
   try {
@@ -72,7 +74,7 @@ const chat = async (req, res) => {
   }
 };
 
-const generateEndlessChapters = async (req, res) => {
+const streamChapterCreate = async (req, res) => {
   const sendSSEData = setupSSEResponse(res);
 
   try {
@@ -80,6 +82,7 @@ const generateEndlessChapters = async (req, res) => {
     const settings = extractSettings(req.body);
     const narrative = extractNarrative(req.body);
     const deepInfraSettings = convertSettingsForDeepInfra(settings);
+    const cache = getCache();
 
     sendSSEData({ type: 'status', message: 'Starting chapter generation...' });
 
@@ -87,92 +90,44 @@ const generateEndlessChapters = async (req, res) => {
     const firstPrompt = createChapterPrompt(context, narrative, 1);
     sendSSEData({ type: 'status', message: 'Generating Chapter 1...' });
 
-    const {
-      text: firstContent,
-      tokens_consumed: firstTokensConsumed,
-      tokens_prompt: firstTokensPrompt,
-    } = await deepInfraService.generateTextStream(firstPrompt, model, deepInfraSettings, async chunk => {
-      sendSSEData({
-        type: 'chunk',
-        content: chunk,
-        chapter: 1,
-        streaming: true,
-      });
-    });
-
-    sendSSEData({
-      type: 'chapter_complete',
-      chapter: 1,
-      tokens_consumed: firstTokensConsumed,
-      tokens_prompt: firstTokensPrompt,
-    });
-
-    // Initialize tracking variables
-    let previousContent = firstContent;
-    let storyGeneratedTillNow = firstContent;
-    let tokens_consumed_total = firstTokensConsumed;
-    let tokens_prompt_total = firstTokensPrompt;
-    const noOfChapter = config.get('endless_chapter_count');
-    const summarisedPrompt = [firstPrompt];
-
-    // Generate subsequent chapters
-    for (let i = 2; i <= noOfChapter; i++) {
-      sendSSEData({
-        type: 'status',
-        message: `Generating Chapter ${i}...`,
-        progress: {
-          current: i,
-          total: noOfChapter,
-        },
-      });
-
-      const nextChapterPrompt = createContinuationPrompt(i, storyGeneratedTillNow, previousContent);
-      summarisedPrompt.push(nextChapterPrompt);
-
-      const {
-        text: contentOfThisChapter,
-        tokens_consumed,
-        tokens_prompt,
-      } = await deepInfraService.generateTextStream(nextChapterPrompt, model, deepInfraSettings, async chunk => {
+    const { text, tokens_consumed, tokens_prompt } = await deepInfraService.generateTextStream(
+      firstPrompt,
+      model,
+      deepInfraSettings,
+      async chunk => {
         sendSSEData({
           type: 'chunk',
           content: chunk,
-          chapter: i,
+          chapter: 1,
           streaming: true,
         });
-      });
+      }
+    );
 
-      logger.info(`Chapter #${i} generated`, {
-        contentLength: contentOfThisChapter.length,
-        tokens_consumed,
-        tokens_prompt,
-      });
-
-      sendSSEData({
-        type: 'chapter_complete',
-        chapter: i,
-        tokens_consumed,
-        tokens_prompt,
-      });
-
-      // Update tracking variables
-      previousContent = contentOfThisChapter;
-      storyGeneratedTillNow += contentOfThisChapter;
-      tokens_consumed_total += tokens_consumed;
-      tokens_prompt_total += tokens_prompt;
-    }
-
-    // Send final completion data
+    const storyId = uuidv4();
     sendSSEData({
-      type: 'complete',
-      summary: {
-        prompt_used: summarisedPrompt.join('#####Prompt-End#####'),
-        tokens_consumed: tokens_consumed_total,
-        tokens_prompt: tokens_prompt_total,
-        chapters_generated: noOfChapter,
-        total_content_length: storyGeneratedTillNow.length,
-      },
+      type: 'chapter_complete',
+      chapter: 1,
+      tokens_consumed,
+      tokens_prompt,
+      story_id: storyId,
     });
+
+    await cache.set(
+      storyId,
+      {
+        chapters: [
+          {
+            type: 'chapter_complete',
+            chapter: 1,
+            tokens_consumed,
+            tokens_prompt,
+            story: text,
+          },
+        ],
+      },
+      30 * 60 // cache story for 30 mins
+    );
 
     res.write('data: [DONE]\n\n');
     res.end();
@@ -181,18 +136,19 @@ const generateEndlessChapters = async (req, res) => {
   }
 };
 
-const chatEndless = async (req, res) => {
+const chatStream = async (req, res) => {
   const sendSSEData = setupSSEResponse(res);
 
   try {
-    const { message, history, model } = req.body;
+    const { message = '', history = [], model, story_id } = req.body;
     const settings = extractSettings(req.body);
+    const cache = getCache();
 
     validateChatHistory(history);
 
     sendSSEData({ type: 'status', message: 'Continuing the story...' });
 
-    const prompt = generateStoryPrompt(history, message);
+    const prompt = await createContinuationPrompt(story_id, message);
     sendSSEData({ type: 'status', message: 'Generating next chapter...' });
 
     const deepInfraSettings = convertSettingsForDeepInfra(settings);
@@ -215,10 +171,30 @@ const chatEndless = async (req, res) => {
       tokens_prompt,
     });
 
+    // Update cache
+    const existing = await cache.get(story_id);
+    await cache.set(
+      story_id,
+      {
+        chapters: [
+          ...existing.chapters, // copy existing chapters
+          {
+            type: 'chapter_complete',
+            chapter: existing.chapters.length + 1,
+            tokens_consumed,
+            tokens_prompt,
+            story: content,
+          },
+        ],
+      },
+      30 * 60 // cache story for 30 mins
+    );
+
     sendSSEData({
       type: 'chapter_complete',
       tokens_consumed,
       tokens_prompt,
+      story_id: story_id,
     });
 
     sendSSEData({
@@ -250,6 +226,6 @@ const chatEndless = async (req, res) => {
 module.exports = {
   generateChapter,
   chat,
-  generateEndlessChapters,
-  chatEndless,
+  streamChapterCreate,
+  chatStream,
 };
